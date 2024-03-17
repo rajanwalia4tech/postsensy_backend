@@ -18,8 +18,8 @@ import { EmailHelper } from 'src/helpers/emailHelper';
 })
 export class UsersModule {
   configure(consumer: MiddlewareConsumer) {
-    // consumer
-    //   .apply(TokenValidationMiddleware)
-    //   .forRoutes("*");
+    consumer
+      .apply(TokenValidationMiddleware)
+      .forRoutes(UsersController);
   }
 }

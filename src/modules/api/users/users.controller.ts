@@ -13,8 +13,8 @@ export class UsersController {
     ){}
 
     @Get("/")
-    async getUsers(@Query("userId") userId : string, @Res() res : Response){
-        const response = await this.userService.getUser(1);
+    async getUsers(@Query("userId") userId : number, @Res() res : Response){
+        const response = await this.userService.getUser(userId);
         return res.status(HttpStatus.OK).json({
             message : RESPONSE.SUCCESS,
             data : response
