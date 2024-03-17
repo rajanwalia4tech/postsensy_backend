@@ -1,18 +1,31 @@
-import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query, Req, Res } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
+import { EmailHelper } from 'src/helpers/emailHelper';
+import {Response} from 'express';
+import { RESPONSE } from 'src/common/constants/response-messages';
 
 @Controller('users')
 export class UsersController {
-    constructor(private userService : UsersService){}
+    constructor(
+        private userService : UsersService,
+        private emailHelper : EmailHelper
+    ){}
 
-    @Get("/:userId")
-    async getUsers(@Param("userId") userId : string){
-        return this.userService.getUser(userId);
+    @Get("/")
+    async getUsers(@Query("userId") userId : string, @Res() res : Response){
+        const response = await this.userService.getUser(1);
+        return res.status(HttpStatus.OK).json({
+            message : RESPONSE.SUCCESS,
+            data : response
+        });
     }
 
-    @Post()
-    async createUser(@Body() createUserDto : CreateUserDto){
-        return await this.userService.create(createUserDto);
+    @Get("/test")
+    async getTest(@Req() req : Request, @Query() query : any){
+        return {
+            data : {},
+            statusCode : HttpStatus.OK
+        }
     }
 }

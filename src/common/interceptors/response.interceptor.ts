@@ -22,13 +22,20 @@ import {
       context: ExecutionContext,
       next: CallHandler,
     ): Observable<Response<T>> {
+      const request = context.switchToHttp().getRequest();
+      const response = context.switchToHttp().getResponse();
+
       return next.handle().pipe(
-        map((data) => ({
-          status: 'success',
-          code: StatusCodesList.Success,
-          statusCode: HttpStatus.OK,
-          data,
-        })),
+          map((res) => {
+            console.log(response);
+            return response.status(res.statusCode).json({
+              status: 'success',
+              code: StatusCodesList.Success,
+              statusCode: res.statusCode,
+              message : res.message || "Successfully processed the request",
+              data : res.data
+          })
+        }),
         // catchError((error) => {
         //   const status = error instanceof HttpException ? error.getStatus() : 500;
         //   const response: Response<T> = {
