@@ -7,10 +7,11 @@ import { UserRepository } from './users.repository';
 import { TokenValidationMiddleware } from 'src/middlewares/auth.middleware';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { EmailHelper } from 'src/helpers/emailHelper';
+import { LinkedinInfo } from './entities/linkedin.entity';
 
 @Module({
   imports : [
-    TypeOrmModule.forFeature([User])
+    TypeOrmModule.forFeature([User, LinkedinInfo])
   ],
   providers: [UsersService, UserRepository, JwtService,EmailHelper],
   controllers: [UsersController],
