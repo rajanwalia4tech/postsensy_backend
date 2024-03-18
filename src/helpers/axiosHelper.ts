@@ -4,66 +4,50 @@ import { Injectable } from '@nestjs/common';
 export class AxiosHelper {
   constructor() {}
   
-  async axiosPOSTHelper(
-    data: any,
+  async post(
     url: string,
-    headers: any,
-    vendor: string,
+    data: any,
+    config: any, // like headers, params
+    vendor?: string,
     userId?: string,
     type?: string,
   ) {
     let res = null;
-    let logResponse = null;
-    await axios
-      .post(url, data, { headers })
-      .then((response: any) => {
-        res = response.data;
-        logResponse = response.data;
-      })
-      .catch((error: { response: { data: any } }) => {
-        logResponse = error?.response?.data;
-      });
 
-    // if (vendor !== 'internal') {
-    //   this.logService.create({
-    //     userId,
-    //     type,
-    //     status: res ? 'success' : 'error',
-    //     vendor,
-    //     request: {
-    //       url: url,
-    //       requestBody: data,
-    //       requestHeaders: headers,
-    //     },
-    //     response: logResponse,
-    //   });
-    // }
-    return res;
+    try{
+      const response = await axios.post(url, data, config);
+      res = response.data;
+      console.log(url, " ---> ",res);
+      return res;
+    }catch(error){
+      console.error("Error ---> ", url,"\n\n", error?.response?.data);
+      throw error?.response?.data;
+    }
   }
 
-  async axiosPUTHelper(url: string, headers: any, data: any) {
+  async put(url: string, config: any) {
     let res = null;
-    await axios
-      .put(url, data, { headers })
-      .then((response: any) => {
-        res = response.data;
-      })
-      .catch((error: { response: { data: any } }) => {
-        console.log(error.response.data);
-      });
-    return res;
+    try{
+      const response = await axios.get(url, config);
+      res = response.data;
+      console.log(url, " ---> ",res);
+      return res;
+    }catch(error){
+      console.error("Error ---> ", url,"\n\n", error?.response?.data);
+      throw error?.response?.data;
+    }
   }
 
-  async axiosGETHelper(url: string, headers: any) {
-    let data;
-    await axios
-      .get(url, { headers })
-      .then((response: any) => {
-        data = response.data;
-      })
-      .catch((error: Error) => {
-        throw error;
-      });
-    return data;
+  async get(url: string, config: any) {
+    let res;
+    try{
+      const response = await axios.get(url, config);
+      res = response.data;
+      console.log(url, " ---> ",res);
+      return res;
+    }catch(error){
+      console.error("Error ---> ", url,"\n\n", error?.response?.data);
+      throw error?.response?.data;
+    }
   }
 }

@@ -1,13 +1,23 @@
+import { Injectable } from '@nestjs/common';
+import {ConfigService} from '@nestjs/config';
+
+@Injectable()
 export class EmailHelper{
-    config = {
-        noreply : "bulkindexer@gmail.com",
-        mailJetAPIPublicKey : "a9476a822deb7bc1526775cc0e67781c",
-        mailJetAPIPrivateKey : "747326f848ac5cf529efabd5d07f4412",
-        frontend : "https://example.com"
+    private noreply: string;
+    private mailJetAPIPublicKey: string;
+    private mailJetAPIPrivateKey: string;
+    private frontend: string;
+
+    constructor(private readonly configService : ConfigService){
+        this.noreply = this.configService.get("PRIMARY_EMAIL");
+        this.mailJetAPIPublicKey = this.configService.get("MAIL_JET_PUBLIC_KEY");
+        this.mailJetAPIPrivateKey = this.configService.get("MAIL_JET_PRIVATE_KEY");
+        this.frontend = this.configService.get("FRONTEND_BASE_URL");
     }
+
     async sendEmail(msg:any){
         try{
-            const mailjet = require ('node-mailjet').apiConnect(this.config.mailJetAPIPublicKey, this.config.mailJetAPIPrivateKey);
+            const mailjet = require ('node-mailjet').apiConnect(this.mailJetAPIPublicKey, this.mailJetAPIPrivateKey);
             let response = await mailjet.post("send", {'version': 'v3.1'})
             .request({
                 "Messages": [
@@ -38,7 +48,7 @@ export class EmailHelper{
     setEmailParams (toEmail, fromEmail, fromName, subject, html, text="Hello"){
         return {
           toEmail,
-          fromEmail : fromEmail || this.config.noreply,
+          fromEmail : fromEmail || this.noreply,
           fromName,
           subject,
           text,
@@ -47,7 +57,7 @@ export class EmailHelper{
     }
     
     async sendVerificationEmail(name : string,email : string,token:string){
-        const verificationLink = `<a href=${this.config.frontend}/auth/verify-email?token=${token}>Verify Email</a>`
+        const verificationLink = `<a href=${this.frontend}/auth/verify-email?token=${token}>Verify Email</a>`
         let template = `Hi ${name},<br>
         <br>
         Thanks for signing up to Likairo! Before we get started, we just need to confirm this is you.<br>
@@ -65,7 +75,7 @@ export class EmailHelper{
     }
 
     async resetPasswordEmail(name : string,email : string,token:string){
-        const verificationLink = `<a href=${this.config.frontend}/auth/reset-password?token=${token}>Reset Password</a>`
+        const verificationLink = `<a href=${this.frontend}/auth/reset-password?token=${token}>Reset Password</a>`
         let template = `Hi ${name},<br>
         <br>
         Please click here to reset you password : ${verificationLink}

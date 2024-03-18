@@ -1,4 +1,4 @@
-import { Body, Controller, HttpStatus, Patch, Post, Query, Req, Res } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, HttpStatus, Patch, Post, Query, Req, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
 import { UserLoginDto } from './dtos/user-login.dto';
@@ -9,13 +9,15 @@ import { RESPONSE } from 'src/common/constants/response-messages';
 import { TokenService } from '../token/token.service';
 import { TokenType } from '../token/enums/token-type.enum';
 import { ResetPasswordDto, UpdatePasswordDto } from './dtos/reset-password.dto';
+import { LinkedinApiHelper } from 'src/helpers/linkedApiHelper';
 
 @Controller('auth')
 export class AuthController {
     constructor(
         private readonly authService : AuthService,
         private readonly userService : UsersService,
-        private readonly emailHelper : EmailHelper
+        private readonly emailHelper : EmailHelper,
+        private readonly linkedinApiHelper : LinkedinApiHelper
     ){}
 
     @Post("sign-up")
@@ -88,4 +90,28 @@ export class AuthController {
             }
         });
     }
+
+    @Get("/linkedin")
+    async redirectToLinkedinAuth(@Res() res : Response){
+        const redirectUrl = this.linkedinApiHelper.getConnectUrl();
+        return res.redirect(redirectUrl); // redirect to linkedin Auth Page
+    }
+
+    @Get("/linkedin/callback")
+    async getAccessToken(@Query("code") code : string, @Res() res : Response){
+        console.log("code ", code);
+        if (!code) {
+            throw new BadRequestException("Please send the code.")
+        }
+        // step 2 : get access token via code
+        const tokenInfo = await this.linkedinApiHelper.getAccessToken(code);
+        // Step 3: Use access token to get user information
+        const profileInfo = await this.linkedinApiHelper.getUserInfoByAccessToken(tokenInfo);
+        console.log("sdsfsd",profileInfo)
+        return res.status(HttpStatus.OK).json({
+            message : RESPONSE.SUCCESS,
+            data : profileInfo
+        });
+    }
+
 }

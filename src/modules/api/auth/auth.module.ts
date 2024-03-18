@@ -6,6 +6,8 @@ import { AuthController } from './auth.controller';
 import { UsersModule } from '../users/users.module';
 import { EmailHelper } from 'src/helpers/emailHelper';
 import { TokenModule } from '../token/token.module';
+import { LinkedinApiHelper } from 'src/helpers/linkedApiHelper';
+import { AxiosHelper } from 'src/helpers/axiosHelper';
 
 @Module({
   imports : [
@@ -19,7 +21,7 @@ import { TokenModule } from '../token/token.module';
       }
     })
   ],
-  providers: [AuthService, EmailHelper],
+  providers: [AuthService, AxiosHelper, EmailHelper, LinkedinApiHelper],
   controllers: [AuthController]
 })
 export class AuthModule {}
