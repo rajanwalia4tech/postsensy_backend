@@ -92,9 +92,12 @@ export class AuthController {
     }
 
     @Get("/linkedin")
-    async redirectToLinkedinAuth(@Res() res : Response){
+    async redirectToLinkedinAuth(@Req() req : Request, @Res() res : Response){
+        console.log("headers : ",req.headers);
         const redirectUrl = this.linkedinApiHelper.getConnectUrl();
-        return res.redirect(redirectUrl); // redirect to linkedin Auth Page
+        return res.status(HttpStatus.OK).json({
+            redirectUrl
+        }) // redirect to linkedin Auth Page
     }
 
     @Get("/linkedin/callback")
