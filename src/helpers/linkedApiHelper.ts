@@ -19,12 +19,14 @@ export class LinkedinApiHelper{
         this.redirectUrl = this.configService.get("LINKEDIN_REDIRECT_URL") + "/auth/linkedin/callback";
     }
 
-    getConnectUrl(){
+    getConnectUrl(frontendUrl : string){
+        this.redirectUrl = frontendUrl + "auth/linkedin/callback";
         const authUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${this.clientId}&redirect_uri=${this.redirectUrl}&scope=${this.scope.join(' ')}&state=123456789&nonce=987654321`;
         return authUrl;
     }
 
-    async getAccessToken(code:string) : Promise<string>{
+    async getAccessToken(frontendUrl : string, code:string) : Promise<string>{
+        this.redirectUrl = frontendUrl + "auth/linkedin/callback";
         const response = await this.axiosHelper.post('https://www.linkedin.com/oauth/v2/accessToken', null,{
             params:{
                 grant_type: 'authorization_code',

@@ -77,4 +77,9 @@ export class UsersService {
         await this.userRepository.update({id: userId},{isEmailVerified:true});
         return true;
     }
+
+    async verifyLinkedin(userId : number){
+        await this.userRepository.update({id: userId},{ isLinkedinConnected:true});
+        return true;
+    }
 }

@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, HttpStatus, Patch, Post, Query, Req, Res } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, HttpStatus, Patch, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
 import { UserLoginDto } from './dtos/user-login.dto';
@@ -93,23 +93,26 @@ export class AuthController {
 
     @Get("/linkedin")
     async redirectToLinkedinAuth(@Req() req : Request, @Res() res : Response){
-        console.log("headers : ",req.headers);
-        const redirectUrl = this.linkedinApiHelper.getConnectUrl();
+        const frontendUrl = req.headers["referer"];
+        const redirectUrl = this.linkedinApiHelper.getConnectUrl(frontendUrl);
         return res.status(HttpStatus.OK).json({
             redirectUrl
         }) // redirect to linkedin Auth Page
     }
 
+    @UseGuards()
     @Get("/linkedin/callback")
-    async getAccessToken(@Query("code") code : string, @Res() res : Response){
+    async getAccessToken(@Req() req : Request, @Query("code") code : string, @Query("userId") userId : number, @Res() res : Response){
+        const frontendUrl = req.headers["referer"];
         console.log("code ", code);
         if (!code) {
             throw new BadRequestException("Please send the code.")
         }
         // step 2 : get access token via code
-        const tokenInfo = await this.linkedinApiHelper.getAccessToken(code);
+        const tokenInfo = await this.linkedinApiHelper.getAccessToken(frontendUrl, code);
         // Step 3: Use access token to get user information
         const profileInfo = await this.linkedinApiHelper.getUserInfoByAccessToken(tokenInfo);
+        this.userService.verifyLinkedin(userId);
         console.log("sdsfsd",profileInfo)
         return res.status(HttpStatus.OK).json({
             message : RESPONSE.SUCCESS,

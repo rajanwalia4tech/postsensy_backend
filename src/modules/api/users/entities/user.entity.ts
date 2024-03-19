@@ -21,6 +21,9 @@ export class User{
     isEmailVerified : boolean;
 
     @Column({default:false})
+    isLinkedinConnected : boolean;
+
+    @Column({default:false})
     isBlocked : boolean;
 
     @Column({default : UserRole.USER})
