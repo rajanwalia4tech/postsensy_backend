@@ -107,4 +107,17 @@ export class UsersService {
         await this.userRepository.update({id: payload.userId },
         {linkedinId :linkedinInfo.id, isLinkedinConnected : true});
     }
+
+    async getLinkedinInfo(userId:number){
+        const linkedinInfo = await this.linkedinInfoRepository.findOne({
+            where: {
+                userId
+            },
+            select : ['id','userId','name','email','isEmailVerified','createdAt','updatedAt']
+        });
+        if(!linkedinInfo)
+            throw new HttpException("Linkedin is not connected",HttpStatus.BAD_REQUEST);
+
+        return linkedinInfo;
+    }
 }

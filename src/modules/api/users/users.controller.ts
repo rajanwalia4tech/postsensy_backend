@@ -21,6 +21,16 @@ export class UsersController {
         });
     }
 
+
+    @Get("/linkedin-info")
+    async getLinkedinInfo(@Query("userId") userId : number, @Res() res : Response){
+        const response = await this.userService.getLinkedinInfo(userId);
+        return res.status(HttpStatus.OK).json({
+            message : RESPONSE.SUCCESS,
+            data : response
+        });
+    }
+
     @Get("/test")
     async getTest(@Req() req : Request, @Query() query : any){
         return {
