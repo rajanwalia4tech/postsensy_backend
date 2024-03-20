@@ -1,35 +1,41 @@
-import {Column, CreateDateColumn, Entity, Index, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
-import { UserRole } from '../enums/user.enum';
+import {Column, CreateDateColumn, Entity, Index, JoinColumn, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
+import { User } from './user.entity';
 
 @Entity()
 export class LinkedinInfo{
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn({name : "id"})
     id : number;
 
-    @Column({unique : true})
+    // @OneToOne(() => User,{
+    //     cascade:true
+    // })
+    // @JoinColumn({referencedColumnName : "id", name : "user_id"})
+    // user : User;
+
+    @Column({name : "user_id", unique:true})
     userId : number;
 
-    @Column({nullable:false})
+    @Column({name : "access_token", nullable:false})
     accessToken : string;
 
-    @Column({nullable:false})
+    @Column({name : "name", nullable:false})
     name : string;
 
-    @Column()
+    @Column({name : "email"})
     email: string;
 
-    @Column({default:false})
+    @Column({name : "is_email_verified", default:false})
     isEmailVerified : boolean;
 
-    @Column({default:null})
-    expires_in : number;
+    @Column({name : "expires_in", default:null})
+    expiresIn : number;
 
-    @Column("json")
+    @Column({type:"json", name : "meta_data"})
     metaData : JSON;
 
-    @CreateDateColumn()
+    @CreateDateColumn({name : "created_at"})
     createdAt: Date;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({name : "updated_at"})
     updatedAt: Date;
 }

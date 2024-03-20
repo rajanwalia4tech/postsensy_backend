@@ -1,43 +1,44 @@
-import {Column, CreateDateColumn, Entity, Index, JoinColumn, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
+import {Column, CreateDateColumn, Entity, TableForeignKey, Index, JoinColumn, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import { UserRole } from '../enums/user.enum';
 import { LinkedinInfo } from './linkedin.entity';
 
 @Entity()
 export class User{
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn({name : "id"})
     id : number;
 
-    @OneToOne(() => LinkedinInfo)
-    @JoinColumn()
-    linkedin: LinkedinInfo
+    // @OneToOne(() => LinkedinInfo)
+    // @JoinColumn({referencedColumnName : "id", name : "linkedin_id"})
+    @Column({unique : true, name: "linkedin_id"})
+    linkedinId: number
 
-    @Column({nullable:false})
+    @Column({name : "name", nullable:false})
     name : string;
 
-    @Column({unique:true})
+    @Column({name : "email", unique:true})
     email: string;
 
-    @Column({default:false})
+    @Column({name : "is_email_verified",default:false})
     isEmailVerified : boolean;
 
-    @Column({default:false})
+    @Column({name : "is_linkedin_connected", default:false})
     isLinkedinConnected : boolean;
 
-    @Column({default:false})
+    @Column({name : "is_blocked", default:false})
     isBlocked : boolean;
 
-    @Column({default : UserRole.USER})
+    @Column({name : "role", default : UserRole.USER})
     role : UserRole;
 
-    @Column({nullable:true})
+    @Column({name : "company_name", nullable:true})
     companyName : string;
 
-    @Column({nullable:false})
+    @Column({name : "password", nullable:false})
     password : string;
 
-    @CreateDateColumn()
+    @CreateDateColumn({name : "created_at"})
     createdAt: Date;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({name: "updated_at"})
     updatedAt: Date;
 }

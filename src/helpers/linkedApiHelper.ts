@@ -42,7 +42,7 @@ export class LinkedinApiHelper{
     async getUserInfoByAccessToken(payload : any){
         const response = await this.axiosHelper.get('https://api.linkedin.com/v2/userinfo',{
             headers : {
-              Authorization: `${payload.token_type} ${payload.access_token}`
+              Authorization: `Bearer ${payload.access_token}`
             }
         });
         return response; // {sub, email_verified, given_name, family_name, email, { locale : { country, language }} }
