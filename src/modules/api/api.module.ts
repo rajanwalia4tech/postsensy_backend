@@ -4,9 +4,10 @@ import { ResponseInterceptor } from 'src/common/interceptors/response.intercepto
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 import { TokenModule } from './token/token.module';
+import { GenerateModule } from './generate/generate.module';
 
 @Module({
-  imports: [UsersModule, AuthModule, TokenModule],
+  imports: [UsersModule, AuthModule, TokenModule, GenerateModule],
   providers : [
     // {
     //   provide : APP_INTERCEPTOR,

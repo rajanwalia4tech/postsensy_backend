@@ -2,7 +2,7 @@ import {Column, CreateDateColumn, Entity, TableForeignKey, Index, JoinColumn, On
 import { UserRole } from '../enums/user.enum';
 import { LinkedinInfo } from './linkedin.entity';
 
-@Entity()
+@Entity("users")
 export class User{
     @PrimaryGeneratedColumn({name : "id"})
     id : number;

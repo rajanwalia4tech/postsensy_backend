@@ -1,7 +1,7 @@
 import {Column, CreateDateColumn, Entity, Index, JoinColumn, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import { User } from './user.entity';
 
-@Entity()
+@Entity("linkedin_info")
 export class LinkedinInfo{
     @PrimaryGeneratedColumn({name : "id"})
     id : number;

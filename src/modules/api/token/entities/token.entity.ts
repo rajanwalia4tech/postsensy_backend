@@ -3,7 +3,7 @@ import * as moment from 'moment/moment';
 import {TokenType} from '../enums/token-type.enum';
 import { DEFAULT_TOKEN_VALIDITY_DURATION } from 'src/common/constants/app.constants';
 
-@Entity()
+@Entity("tokens")
 export class Token{
     @PrimaryGeneratedColumn()
     id : number;
