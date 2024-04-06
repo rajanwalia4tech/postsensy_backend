@@ -1,12 +1,19 @@
 import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { UserRepository } from './users.repository';
+import { UserRepository } from './repositories/users.repository';
 import { CreateUserDto } from './dtos/create-user.dto';
 import * as bcrypt from 'bcrypt';
+import { LinkedinInfo } from './entities/linkedin.entity';
+import { LinkedinInfoRepository } from './repositories/linkedin-info.repository';
+import { InjectEntityManager } from '@nestjs/typeorm';
+import { EntityManager } from 'typeorm';
+import { link } from 'joi';
 
 @Injectable()
 export class UsersService {
     constructor(
-        private readonly userRepository : UserRepository
+        private readonly userRepository : UserRepository,
+        private readonly linkedinInfoRepository : LinkedinInfoRepository,
+        @InjectEntityManager() private entityManager: EntityManager,
     ){}
     
     async create(createUserDto: CreateUserDto) {
@@ -76,5 +83,48 @@ export class UsersService {
     async verifyEmail(userId:number){
         await this.userRepository.update({id: userId},{isEmailVerified:true});
         return true;
+    }
+
+    async verifyLinkedin(userId : number){
+        await this.userRepository.update({id: userId},{ isLinkedinConnected:true});
+        return true;
+    }
+
+
+    async saveLinkedinInfo(payload : any){
+        // TODO : Need to add transaction as these are atomic queries currently.
+        const linkedinInfo = await this.linkedinInfoRepository.findOneBy({id : payload.userId});
+        let data : any = {
+            accessToken : payload.accessToken,
+            name : payload.name,
+            email : payload.email,
+            isEmailVerified : payload.isEmailVerified,
+            expiresIn : payload.expiresIn,
+            metaData : payload.metaData,
+            userId : payload.userId,
+            personId : payload.personId
+        }
+        if(linkedinInfo){
+            data.id = linkedinInfo.id;
+        }
+        const result = await this.linkedinInfoRepository.save(data);
+
+        await this.userRepository.update({id: payload.userId },{
+            linkedinId :result.id, 
+            isLinkedinConnected : true
+        });
+    }
+
+    async getLinkedinInfo(userId:number){
+        const linkedinInfo = await this.linkedinInfoRepository.findOne({
+            where: {
+                userId
+            },
+            select : ['id','userId','name','email','isEmailVerified','createdAt','updatedAt']
+        });
+        if(!linkedinInfo)
+            throw new HttpException("Linkedin is not connected",HttpStatus.BAD_REQUEST);
+
+        return linkedinInfo;
     }
 }

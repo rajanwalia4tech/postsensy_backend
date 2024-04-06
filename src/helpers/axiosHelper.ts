@@ -16,9 +16,9 @@ export class AxiosHelper {
 
     try{
       const response = await axios.post(url, data, config);
-      res = response.data;
-      console.log(url, " ---> ",res);
-      return res;
+      // res = response.data;
+      // console.log(url, " ---> ",res);
+      return response;
     }catch(error){
       console.error("Error ---> ", url,"\n\n", error?.response?.data);
       throw error?.response?.data;
@@ -42,9 +42,9 @@ export class AxiosHelper {
     let res;
     try{
       const response = await axios.get(url, config);
-      res = response.data;
-      console.log(url, " ---> ",res);
-      return res;
+      // res = response.data;
+      // console.log(url, " ---> ",res);
+      return response.data;
     }catch(error){
       console.error("Error ---> ", url,"\n\n", error?.response?.data);
       throw error?.response?.data;
