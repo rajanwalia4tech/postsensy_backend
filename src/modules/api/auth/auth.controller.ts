@@ -122,7 +122,8 @@ export class AuthController {
                 email : profileInfo.email,
                 isEmailVerified : true, //profileInfo.isEmailVerified,
                 metaData : {tokenInfo, profileInfo},
-                userId
+                userId,
+                personId: profileInfo.sub
             })
 
 

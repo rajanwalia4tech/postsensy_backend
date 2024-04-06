@@ -15,7 +15,10 @@ export class LinkedinInfo{
     @Column({name : "user_id", unique:true})
     userId : number;
 
-    @Column({name : "access_token", nullable:false})
+    @Column({name : "person_id", type:"varchar", length:200, nullable:false})
+    personId : string;
+
+    @Column({name : "access_token", type:"varchar", length:1000, nullable:false})
     accessToken : string;
 
     @Column({name : "name", nullable:false})

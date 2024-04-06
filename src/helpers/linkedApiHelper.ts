@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {ConfigService} from '@nestjs/config';
 import { AxiosHelper } from './axiosHelper';
-
+import axios from 'axios';
 @Injectable()
 export class LinkedinApiHelper{
 
@@ -36,7 +36,7 @@ export class LinkedinApiHelper{
                 client_secret: this.clientSecret
             }
         });
-        return response; // { access_token, expires_in, scope, token_type, id_token }
+        return response.data; // { access_token, expires_in, scope, token_type, id_token }
     }
 
     async getUserInfoByAccessToken(payload : any){
@@ -45,7 +45,34 @@ export class LinkedinApiHelper{
               Authorization: `Bearer ${payload.access_token}`
             }
         });
-        return response; // {sub, email_verified, given_name, family_name, email, { locale : { country, language }} }
+        return response.data; // {sub, email_verified, given_name, family_name, email, { locale : { country, language }} }
     }
 
+
+    async createPost(payload : {accessToken: string, personId : string, text: string}){ // only text
+        const url = "https://api.linkedin.com/v2/posts";
+        const body = {
+            author: `urn:li:person:${payload.personId}`,
+            commentary: payload.text,
+            visibility: "PUBLIC",
+            distribution: {
+                feedDistribution: "MAIN_FEED",
+                targetEntities: [],
+                thirdPartyDistributionChannels: []
+            },
+            lifecycleState: "PUBLISHED",
+            isReshareDisabledByAuthor: false
+        };
+
+        const config = {
+            headers : {
+              Authorization: `Bearer ${payload.accessToken}`
+            }
+        }
+
+        const response = await this.axiosHelper.post(url,body,config);
+        console.log(response.headers);
+        console.log(response.data);
+        return response.data;
+    }
 }

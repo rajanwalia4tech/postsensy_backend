@@ -92,20 +92,27 @@ export class UsersService {
 
 
     async saveLinkedinInfo(payload : any){
-        // TODO : Need to add transaction as this are atomic queries currently.
-        const user = await this.userRepository.findOneBy({id : payload.userId});
-        const linkedinInfo = await this.linkedinInfoRepository.save({
+        // TODO : Need to add transaction as these are atomic queries currently.
+        const linkedinInfo = await this.linkedinInfoRepository.findOneBy({id : payload.userId});
+        let data : any = {
             accessToken : payload.accessToken,
             name : payload.name,
             email : payload.email,
             isEmailVerified : payload.isEmailVerified,
             expiresIn : payload.expiresIn,
             metaData : payload.metaData,
-            userId : payload.userId
-        });
+            userId : payload.userId,
+            personId : payload.personId
+        }
+        if(linkedinInfo){
+            data.id = linkedinInfo.id;
+        }
+        const result = await this.linkedinInfoRepository.save(data);
 
-        await this.userRepository.update({id: payload.userId },
-        {linkedinId :linkedinInfo.id, isLinkedinConnected : true});
+        await this.userRepository.update({id: payload.userId },{
+            linkedinId :result.id, 
+            isLinkedinConnected : true
+        });
     }
 
     async getLinkedinInfo(userId:number){
