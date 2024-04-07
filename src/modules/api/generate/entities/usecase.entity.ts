@@ -37,7 +37,7 @@ export class Usecase{
     maxTokens: number;
 
     @Column({ name : "frequency_penalty", type: "decimal", default: 0.7,  precision: 6, scale: 2 })
-    frequencyPenality: number;
+    frequencyPenalty: number;
     
     @Column({ name : "presence_penalty", type: "decimal", default: 0.7, precision: 6, scale: 2 })
     presencePenalty: number;
