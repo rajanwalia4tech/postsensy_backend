@@ -36,6 +36,7 @@
     "moment": "^2.30.1",
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
+    "nanoid": "^5.0.7",
     "nest-morgan": "^2.0.0",
     "node-mailjet": "^6.0.5",
     "openai": "^4.33.0",

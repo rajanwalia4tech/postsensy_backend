@@ -10,7 +10,7 @@ export class TokenValidationMiddleware implements NestMiddleware {
   ) {}
 
   async use(request: Request, res: Response, next: NextFunction) {
-    console.log("headers : ",request.headers);
+    // console.log("headers : ",request.headers);
     const token = request.headers["authorization"];
     if (!token ) {
       throw new HttpException(

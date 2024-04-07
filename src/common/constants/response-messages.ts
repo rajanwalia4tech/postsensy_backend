@@ -8,5 +8,10 @@ export const RESPONSE = {
         LINKEDIN_FAILED : "Something went wrong while connecting linkedin",
         LINKEDIN_SUCCESS : "Linkedin Connected Successfully"
     },
-
+    POST:{
+        SAVE_CONTEXT : "Context saved successfully",
+        SAVE_TITLE : "Title saved successfully",
+        UPLOAD_POST : "Post uploaded successfully",
+        SCHEDULE_POST : "Scheduled the post successfully"
+    }
 }
