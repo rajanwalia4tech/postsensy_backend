@@ -45,11 +45,12 @@ export class LinkedinApiHelper{
               Authorization: `Bearer ${payload.access_token}`
             }
         });
+        
         return response.data; // {sub, email_verified, given_name, family_name, email, { locale : { country, language }} }
     }
 
 
-    async createPost(payload : {accessToken: string, personId : string, text: string}){ // only text
+    async publishPost(payload : {accessToken: string, personId : string, text: string}){ // only text
         const url = "https://api.linkedin.com/v2/posts";
         const body = {
             author: `urn:li:person:${payload.personId}`,

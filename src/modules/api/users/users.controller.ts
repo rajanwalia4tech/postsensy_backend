@@ -8,8 +8,7 @@ import { RESPONSE } from 'src/common/constants/response-messages';
 @Controller('users')
 export class UsersController {
     constructor(
-        private userService : UsersService,
-        private emailHelper : EmailHelper
+        private userService : UsersService
     ){}
 
     @Get("/")

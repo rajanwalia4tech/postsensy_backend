@@ -1,5 +1,4 @@
 import {BeforeInsert, Column, CreateDateColumn, Entity, Index, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 
 @Entity("usecases")
 export class Usecase{
@@ -8,8 +7,8 @@ export class Usecase{
 
     @Column({name:"name", nullable : false})
     name: string;
-
-    @Column({default : uuidv4(), unique : true })
+    
+    @Column({generated : 'uuid', unique : true })
     usecaseId : string;
 
     @Column({name : "is_active", default : true, comment : "usecase is active or not" })

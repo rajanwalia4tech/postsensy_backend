@@ -44,7 +44,7 @@ export class AxiosHelper {
       const response = await axios.get(url, config);
       // res = response.data;
       // console.log(url, " ---> ",res);
-      return response.data;
+      return response;
     }catch(error){
       console.error("Error ---> ", url,"\n\n", error?.response?.data);
       throw error?.response?.data;

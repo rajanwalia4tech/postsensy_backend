@@ -11,7 +11,7 @@ export const RESPONSE = {
     POST:{
         SAVE_CONTEXT : "Context saved successfully",
         SAVE_TITLE : "Title saved successfully",
-        UPLOAD_POST : "Post uploaded successfully",
+        PUBLISH_POST : "Post published successfully on linkedin",
         SCHEDULE_POST : "Scheduled the post successfully"
     }
 }

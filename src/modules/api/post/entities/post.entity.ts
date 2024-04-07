@@ -1,7 +1,6 @@
 // post.entity.ts
 import { IsNotEmpty, Length } from 'class-validator';
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 
 @Entity("posts")
 export class Post {
@@ -9,7 +8,7 @@ export class Post {
   id: number;
 
   @Index("post_id_idx")
-  @Column({name : "post_id", unique : true, length:40, default : uuidv4()})
+  @Column({name : "post_id", unique : true, length:40, generated : 'uuid'})
   postId : string;
 
   @Index("user_id_idx")
@@ -27,15 +26,21 @@ export class Post {
   @Column({ name : "content", type: 'text', nullable: true })
   content: string;
 
+  @Column({ name : "error", type: 'text', nullable: true })
+  error: string;
+
   @Column({name : "scheduled_at", default : null})
   scheduledAt: Date;
+
+  @Column({name : "published_at", default : null})
+  publishedAt: Date;
 
   @Column({name :"deletedAt", default : null })
   deletedAt : Date;
 
-  @CreateDateColumn({name : "created_at"})
+  @CreateDateColumn({name : "created_at", type:"datetime"})
   createdAt: Date;
 
-  @UpdateDateColumn({name : "updated_at"})
+  @UpdateDateColumn({name : "updated_at",type:"datetime"})
   updatedAt: Date;
 }

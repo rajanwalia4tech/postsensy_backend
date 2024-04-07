@@ -127,4 +127,17 @@ export class UsersService {
 
         return linkedinInfo;
     }
+
+
+    async getFullLinkedinInfo(userId:number){
+        const linkedinInfo = await this.linkedinInfoRepository.findOne({
+            where: {
+                userId
+            }
+        });
+        if(!linkedinInfo)
+            throw new HttpException("Linkedin is not connected",HttpStatus.BAD_REQUEST);
+
+        return linkedinInfo;
+    }
 }
