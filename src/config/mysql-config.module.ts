@@ -8,7 +8,8 @@ import {SnakeNamingStrategy} from 'typeorm-naming-strategies';
         TypeOrmModule.forRootAsync({
           imports: [ConfigModule],
           inject: [ConfigService],
-          useFactory: (configService: ConfigService) => ({
+          useFactory: (configService: ConfigService) => {
+            return {
             type: 'mysql',
             host: configService.get("MYSQL_DB_HOST"),
             port: configService.get("MYSQL_DB_PORT"),
@@ -21,7 +22,8 @@ import {SnakeNamingStrategy} from 'typeorm-naming-strategies';
             autoLoadEntities: true,
             logging: false,
             namingStrategy : new SnakeNamingStrategy()
-          }),
+          }
+        },
         }),
     ],
 })
